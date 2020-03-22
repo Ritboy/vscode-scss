@@ -9,5 +9,6 @@ out/**/*.spec.*
 .prettierignore
 .mergify.yml
 tsconfig.json
-tslint.json
+.eslintrc.json
+.eslintcache
 *.vsix
