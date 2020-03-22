@@ -6,7 +6,6 @@ src/**
 out/**/*.spec.*
 .editorconfig
 .gitignore
-.prettierignore
 .mergify.yml
 tsconfig.json
 .eslintrc.json
