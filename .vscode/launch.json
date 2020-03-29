@@ -35,7 +35,7 @@
 			"runtimeExecutable": "${execPath}",
 			"args": [
 				"--extensionDevelopmentPath=${workspaceRoot}",
-				"--extensionTestsPath=${workspaceFolder}/out/test/e2e/suite",
+				"--extensionTestsPath=${workspaceFolder}/out/unsafe/test/e2e/suite",
 				"${workspaceFolder}/fixtures/e2e"
 			],
 			"stopOnEntry": false,
