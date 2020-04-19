@@ -1,22 +1,28 @@
 import * as path from 'path';
 
 import * as vscode from 'vscode';
-import { LanguageClient, ServerOptions, LanguageClientOptions, NodeModule, TransportKind, RevealOutputChannelOn } from 'vscode-languageclient';
+import { LanguageClient, ServerOptions, LanguageClientOptions, NodeModule, TransportKind, RevealOutputChannelOn, InitializedNotification } from 'vscode-languageclient';
 
-const EXTENSION_ID = 'scss-intellisense';
-const EXTENSION_NAME = 'SCSS IntelliSense';
-const EXTENSION_SERVER_MODULE_PATH = path.join(__dirname, 'unsafe/server.js');
+import { EXTENSION_ID, EXTENSION_NAME } from './constants';
+
+const EXTENSION_SERVER_MODULE_PATH = path.join(__dirname, 'server.js');
 const EXTENSION_DEFAULT_DEBUG_PORT = -1;
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
+	const activeDocumentUri = vscode.window.activeTextEditor?.document.uri.toString();
+
 	const client = buildClient();
 
 	context.subscriptions.push(client.start());
 
-	const activation = client.onReady().catch((error) => {
-		console.log('Client initialization failed');
-		console.error(error);
-	});
+	const activation = client.onReady()
+		.then(() => {
+			client.sendNotification(InitializedNotification.type, { activeDocumentUri });
+		})
+		.catch((error) => {
+			console.log('Client initialization failed');
+			console.error(error);
+		});
 
 	return vscode.window.withProgress(
 		{
@@ -61,9 +67,6 @@ function buildClientOptions(): LanguageClientOptions {
 		synchronize: {
 			configurationSection: ['scss'],
 			fileEvents: vscode.workspace.createFileSystemWatcher('**/*.scss')
-		},
-		initializationOptions: {
-			settings: vscode.workspace.getConfiguration('scss')
 		},
 		revealOutputChannelOn: RevealOutputChannelOn.Never
 	};
